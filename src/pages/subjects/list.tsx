@@ -10,11 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DEPARTMENTS_OPTIONS } from "@/constants";
+import { type CrudFilter, useSelect } from "@refinedev/core";
 import { CreateButton } from "@/components/refine-ui/buttons/create";
 import { DataTable } from "@/components/refine-ui/data-table/data-table";
 import { useTable } from "@refinedev/react-table";
-import { type CrudFilter } from "@refinedev/core";
 import { Subject } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +21,12 @@ import { Badge } from "@/components/ui/badge";
 const SubjectsList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("all");
+
+  const { options: departmentOptions } = useSelect({
+    resource: "departments",
+    optionLabel: "name",
+    optionValue: "id",
+  });
 
   const departmentFilters: CrudFilter[] =
     selectedDepartment === "all"
@@ -52,7 +57,7 @@ const SubjectsList = () => {
         },
         {
           id: "department",
-          accessorKey: "department",
+          accessorKey: "department.name",
           size: 150,
           header: () => <p className="column-title ml-2">Department</p>,
           cell: ({ getValue }) => (
@@ -111,7 +116,7 @@ const SubjectsList = () => {
                 <SelectValue placeholder="Filter by department" />
                 <SelectContent>
                   <SelectItem value="all">All</SelectItem>
-                  {DEPARTMENTS_OPTIONS.map((department) => {
+                  {departmentOptions.map((department) => {
                     return (
                       <SelectItem
                         key={department.value}
