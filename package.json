@@ -86,8 +86,8 @@
     "vite": "^6.3.5"
   },
   "scripts": {
-    "dev": "refine dev --port 5174",
-    "build": "tsc && refine build",
+    "dev": "refine dev",
+    "build": "refine build",
     "start": "refine start",
     "refine": "refine"
   },
