@@ -3,7 +3,7 @@ import { CreateView } from "@/components/refine-ui/views/create-view";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useBack } from "@refinedev/core";
+import { useBack, useList } from "@refinedev/core";
 import { Controller, FormProvider } from "react-hook-form";
 import { useForm } from "@refinedev/react-hook-form";
 import * as z from "zod";
@@ -33,21 +33,37 @@ import {
 } from "@/components/ui/select";
 import { FormControl, FormField, FormMessage } from "@/components/ui/form";
 import UploadWidget from "@/components/upload-widget";
-
-const teachers = [
-  { id: 1, name: "Alice Johnson" },
-  { id: 2, name: "Bob Martinez" },
-  { id: 3, name: "Carol White" },
-];
-
-const subjects = [
-  { id: 1, name: "Biology", code: "BIO" },
-  { id: 2, name: "Mathematics", code: "MATH" },
-  { id: 3, name: "History", code: "HIST" },
-];
+import { Subject, User } from "@/types";
 
 const Create = () => {
   const back = useBack();
+
+  const { query: subjectsQuery } = useList<Subject>({
+    resource: "subjects",
+    pagination: {
+      pageSize: 100,
+    },
+  });
+
+  const { query: teachersQuery } = useList<User>({
+    resource: "users",
+    filters: [
+      {
+        field: "role",
+        operator: "eq",
+        value: "teacher",
+      },
+    ],
+    pagination: {
+      pageSize: 100,
+    },
+  });
+
+  const subjects = subjectsQuery?.data?.data || [];
+  const subjectsLoading = subjectsQuery.isLoading;
+
+  const teachers = teachersQuery?.data?.data || [];
+  const teachersLoading = teachersQuery.isLoading;
 
   //   const form = useForm<z.infer<typeof classSchema>>({
   //     resolver: zodResolver(classSchema),
@@ -62,6 +78,7 @@ const Create = () => {
   });
 
   const {
+    refineCore: { onFinish },
     handleSubmit,
     control,
     formState: { isSubmitting, errors },
@@ -84,9 +101,9 @@ const Create = () => {
     }
   };
 
-  const onSubmit = (values: z.infer<typeof classSchema>) => {
+  const onSubmit = async (values: z.infer<typeof classSchema>) => {
     try {
-      console.log(values);
+      await onFinish(values);
     } catch (error) {
       console.log(error);
     }
@@ -189,6 +206,7 @@ const Create = () => {
                             field.onChange(Number(value))
                           }
                           value={field?.value?.toString()}
+                          disabled={subjectsLoading}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">
@@ -223,10 +241,9 @@ const Create = () => {
                           Teacher <span className="text-orange-600">*</span>
                         </FieldLabel>
                         <Select
-                          onValueChange={(value) =>
-                            field.onChange(Number(value))
-                          }
-                          value={field?.value?.toString()}
+                          onValueChange={field.onChange}
+                          value={field?.value}
+                          disabled={teachersLoading}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">
