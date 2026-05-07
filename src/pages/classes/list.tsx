@@ -17,6 +17,8 @@ import { useTable } from "@refinedev/react-table";
 import { ClassDetails, Subject, User } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
+import { p } from "node_modules/react-router/dist/development/index-react-server-client-BcrVT7Dd.d.mts";
+import { ShowButton } from "@/components/refine-ui/buttons/show";
 
 const ClassesList = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -120,6 +122,21 @@ const ClassesList = () => {
           header: () => <p className="column-title ml-2">Capacity</p>,
           cell: ({ getValue }) => (
             <span className="text-foreground">{getValue<number>()}</span>
+          ),
+        },
+        {
+          id: "details",
+          size: 140,
+          header: () => <p className="colum-title">Details:</p>,
+          cell: ({ row }) => (
+            <ShowButton
+              resource="classes"
+              recordItemId={row.original.id}
+              variant="outline"
+              size="sm"
+            >
+              View
+            </ShowButton>
           ),
         },
       ],
