@@ -17,7 +17,6 @@ import { useTable } from "@refinedev/react-table";
 import { ClassDetails, Subject, User } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import { p } from "node_modules/react-router/dist/development/index-react-server-client-BcrVT7Dd.d.mts";
 import { ShowButton } from "@/components/refine-ui/buttons/show";
 
 const ClassesList = () => {
