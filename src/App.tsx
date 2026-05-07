@@ -16,7 +16,7 @@ import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import { dataProvider } from "./providers/data";
 import { Home, BookOpen, GraduationCap } from "lucide-react";
 import { Layout } from "./components/refine-ui/layout/layout";
-import SubjectsCreate from "./pages/subjects/Create";
+import SubjectsCreate from "./pages/subjects/create";
 import ClassesCreate from "./pages/classes/Create";
 import ClassesShow from "./pages/classes/show";
 
